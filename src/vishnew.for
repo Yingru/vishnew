@@ -313,9 +313,15 @@ CSHEN======set up output file for hydro evolution history ==================
       if(IhydroJetoutput .eq. 1) then
 ! Modified by Yingru (to match the input for Langevin)     
 !        call setHydroFiles(NX0, NX, DX, 2, NY0, NY, DY, 2, T0, DT, 5)
-        call setHydroFiles(NX0, NX, DX, 5, NY0, NY, DY, 5, T0, DT, 1)
-        call writeHydroFilesCtl(NX0, NX, DX, 5, NY0, NY, DY, 5, T0,
-     &                          DT, 1, 3801)
+!if USE HDF5
+!        call setHydroFiles(NX0, NX, DX, 5, NY0, NY, DY, 5, T0, DT, 1)
+!        call writeHydroFilesCtl(NX0, NX, DX, 5, NY0, NY, DY, 5, T0,
+!     &                          DT, 1, 3801)
+!else
+        call setHydroFiles(3801, 'JetData.dat', 3802, 'JetCtl.dat')
+        call writeHydroCtlSparse(NX0, NX, DX, 5, NY0, NY, DY, 5, 
+     &                           T0, DT, 1)
+!endif
       endif
 
       Call Mainpro(NX0,NY0,NZ0,NX,NY,NZ,NXPhy0,NYPhy0,
@@ -826,10 +832,15 @@ CSHEN====END====================================================================
       End Do
 
       if(IhydroJetoutput .eq. 1) then
-        call writeHydroBlock(ITime-1, Ed*HbarC, sd, PL*HbarC,
-     &      Temp*HbarC, Vx, Vy, Pi00*HbarC, Pi01*HbarC, Pi02*HbarC,
-     &      Pi02*HbarC*0.0d0, Pi11*HbarC, Pi12*HbarC, Pi12*HbarC*0.0d0,
-     &      Pi22*HbarC, Pi22*HbarC*0.0d0, Pi33*HbarC, PPI*HbarC)
+! modified By Yingru
+!ifdef USE_HDF5
+!        call writeHydroBlock(ITime-1, Ed*HbarC, sd, PL*HbarC,
+!     &      Temp*HbarC, Vx, Vy, Pi00*HbarC, Pi01*HbarC, Pi02*HbarC,
+!     &      Pi02*HbarC*0.0d0, Pi11*HbarC, Pi12*HbarC, Pi12*HbarC*0.0d0,
+!     &      Pi22*HbarC, Pi22*HbarC*0.0d0, Pi33*HbarC, PPI*HbarC)
+!else
+        call writeHydroBlockSparse(Time,Ed*HbarC,Sd,Temp*HbarC,Vx,Vy)
+!endif
       endif
 
 CSHEN===========================================================================

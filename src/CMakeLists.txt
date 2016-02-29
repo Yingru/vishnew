@@ -7,7 +7,7 @@ add_executable(${PROJECT_NAME}
   oscar_output.for
   phy_boundary.for
   vishnew.for
-  jet_output_hdf5.for
+  JetOutput-0.8.for
 )
 
 target_link_libraries(${PROJECT_NAME} ${HDF5_FORTRAN_LIB} ${HDF5_C_LIB})
