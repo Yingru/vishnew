@@ -6,7 +6,7 @@
       Use HDF5
       Implicit none
 
-      CHARACTER(LEN=20) :: H5hydroFilename = "results/JetData.h5" ! File name
+      CHARACTER(LEN=20) :: H5hydroFilename = "JetData.dat" ! File name
       CHARACTER(LEN=8) :: groupname = "/Event" ! Group name
       Common /dataFile/ H5hydroFilename, groupname
 
@@ -79,7 +79,7 @@
      &                            Tau0_in, dTau_in, LST_in, ctlID_in)
      
       Implicit None
-      CHARACTER(LEN=20) :: HydroCtlFilename = "results/JetCtl.dat"  ! filename
+      CHARACTER(LEN=20) :: HydroCtlFilename = "JetCtl.dat"  ! filename
       Integer :: ctlID_in
       CHARACTER(LEN=20) :: ctlgroupname = "/Event"  ! group name
       Common /CtlFile/ HydroCtlFilename, ctlgroupname
