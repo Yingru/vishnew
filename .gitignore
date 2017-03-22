@@ -1,1 +1,4 @@
 build/
+eos.dat
+fit_etas.f
+fiteatas.py
