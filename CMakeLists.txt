@@ -11,10 +11,13 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX "$ENV{HOME}/.local"
       CACHE PATH "Install path prefix, prepended onto install directories."
       FORCE)
+  set(CMAKE_INSTALL_PREFIX_ALT "/usr/lib64/gfortran/modules/"
+      CACHE PATH "Install another path prefix"
+      FORCE)
 endif()
 
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
-message(STATUS "Install prefix: ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "Install prefix: ${CMAKE_INSTALL_PREFIX} ${CMAKE_INSTALL_PREFIC_ALT}")
 
 
 find_library(HDF5_FORTRAN_LIB hdf5_fortran)
@@ -23,14 +26,14 @@ if("${HDF5_FORTRAN_LIB}" STREQUAL "HDF5_FORTRAN_LIB-NOTFOUND")
 endif()
 
 find_path(HDF5_INCLUDE_DIRS hdf5.mod)
-#set(HDF5_INCLUDE_DIRS hdf5.mod)
+set(HDF5_INCLUDE_DIRS "/usr/lib64/gfortran/modules/")
 if("${HDF5_INCLUDE_DIRS}" STREQUAL "HDF5_INCLUDE_DIRS-NOTFOUND")
   message(STATUS "HDF5  library not found")
 endif()
 
 
 
-find_library(HDF5_C_LIB hdf5)
+#find_library(HDF5_C_LIB hdf5)
 
 include_directories(${HDF5_INCLUDE_DIRS})
 
