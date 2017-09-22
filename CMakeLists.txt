@@ -11,7 +11,7 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX "$ENV{HOME}/.local"
       CACHE PATH "Install path prefix, prepended onto install directories."
       FORCE)
-  set(CMAKE_INSTALL_PREFIX_ALT "/usr/lib64/gfortran/modules/"
+  set(CMAKE_INSTALL_PREFIX_ALT "/usr/lib64"
       CACHE PATH "Install another path prefix"
       FORCE)
 endif()
