@@ -26,9 +26,9 @@ if("${HDF5_FORTRAN_LIB}" STREQUAL "HDF5_FORTRAN_LIB-NOTFOUND")
 endif()
 
 find_path(HDF5_INCLUDE_DIRS hdf5.mod)
-set(HDF5_INCLUDE_DIRS "/usr/lib64/gfortran/modules/")
 if("${HDF5_INCLUDE_DIRS}" STREQUAL "HDF5_INCLUDE_DIRS-NOTFOUND")
-  message(STATUS "HDF5  library not found")
+ message(STATUS "HDF5  library not found")
+ set(HDF5_INCLUDE_DIRS "/usr/lib64/gfortran/modules/")
 endif()
 
 
