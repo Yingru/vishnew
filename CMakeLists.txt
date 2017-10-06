@@ -20,22 +20,16 @@ message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "Install prefix: ${CMAKE_INSTALL_PREFIX} ${CMAKE_INSTALL_PREFIC_ALT}")
 
 
-find_library(HDF5_FORTRAN_LIB hdf5_fortran)
-if("${HDF5_FORTRAN_LIB}" STREQUAL "HDF5_FORTRAN_LIB-NOTFOUND")
-  message(STATUS "HDF5 C++ library not found")
+find_package(HDF5 COMPONENTS Fortran)
+if(HDF5_FOUND)
+  message(STATUS "HDF5 found, using pakage")
+  message(STATUS ${HDF5_INCLUDE_DIRS})
+  message(STATUS ${HDF5_Fortran_LIBRARIES})
+  message(STATUS ${HDF5_LIBRARIES})
+  include_directories(${HDF5_INCLUDE_DIRS})
+else()
+  message(STATUS "hdf5 not found, using package")
 endif()
-
-find_path(HDF5_INCLUDE_DIRS hdf5.mod)
-if("${HDF5_INCLUDE_DIRS}" STREQUAL "HDF5_INCLUDE_DIRS-NOTFOUND")
- message(STATUS "HDF5  library not found")
- set(HDF5_INCLUDE_DIRS "/usr/lib64/gfortran/modules/")
-endif()
-
-
-
-#find_library(HDF5_C_LIB hdf5)
-
-include_directories(${HDF5_INCLUDE_DIRS})
 
 
 # Set default architecture flags to optimize for the current system,

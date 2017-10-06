@@ -10,7 +10,7 @@ add_executable(${PROJECT_NAME}
   jet_output_hdf5.for
 )
 
-target_link_libraries(${PROJECT_NAME} ${HDF5_FORTRAN_LIB} ${HDF5_C_LIB})
+target_link_libraries(${PROJECT_NAME} ${HDF5_Fortran_LIBRARIES})
 
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${PROJECT_NAME})
