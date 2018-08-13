@@ -16,6 +16,20 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
       FORCE)
 endif()
 
+find_package(HDF5 COMPONENTS Fortran)
+if(HDF5_FOUND)
+  message(STATUS "hdf5 found")
+  message(STATUS ${HDF5_INCLUDE_DIRS} )
+  message(STATUS ${HDF5_Fortran_LIBRARIES})
+  message(STATUS ${HDF5_LIBRARIES})
+  include_directories(${HDF5_INCLUDE_DIRS})
+
+else()
+  message(STATUS "hdf5 not found")
+endif()
+
+
+
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "Install prefix: ${CMAKE_INSTALL_PREFIX} ${CMAKE_INSTALL_PREFIC_ALT}")
 
@@ -38,7 +52,12 @@ if(NOT CMAKE_Fortran_FLAGS MATCHES "-march|-mtune")
   set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -march=native")
 endif()
 
-set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -cpp -fno-align-commons")
+set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -cpp")
+
+option(WARNINGS "enable compiler warnings" OFF)
+if(WARNINGS)
+  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wall -Wextra")
+endif()
 
 install(FILES ${PROJECT_NAME}.conf DESTINATION bin)
 

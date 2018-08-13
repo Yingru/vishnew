@@ -30,7 +30,7 @@ This will place several files in `<prefix>/vishnew`: the compiled binary `vishne
 
 ### Equation of state
 
-The EOS table is generated at build time by the script `eos/generate-eos-table.py`, which blends a hadron resonance gas EOS at low temperature into the HotQCD EOS (http://inspirehep.net/record/1307761) at high temperature.
+The EOS table is generated at build time by the script `eos/generate-eos-table.py`, which connects a hadron resonance gas EOS at low temperature to a lattice EOS (HotQCD, http://inspirehep.net/record/1307761) at high temperature.
 Run `./generate-eos-table.py --plot` to visualize several important thermodynamic quantities.
 
 The EOS table has columns
@@ -38,7 +38,7 @@ The EOS table has columns
     energy_density  pressure  entropy_density  temperature
 
 in natural units of GeV and fm.
-It has exactly 155500 rows with evenly-spaced energy density steps, as expected by the `vishnew` code.
+It has 100000 rows with evenly-spaced energy density steps, as expected by the `vishnew` code.
 
 ### Configuration
 
@@ -48,17 +48,42 @@ Parameters may also be passed on the command line with a `key=value` syntax, e.g
 
     vishnew Edec=0.30
 
+### Temperature-dependent viscosities
+
+The shear viscosity is parametrized as
+
+    (eta/s)(T) = min + slope*(T - Tc) * (T/Tc)^curvature
+
+for T > Tc = 0.154 GeV, where `min`, `slope`, and `curvature` are input parameters.
+The `min` and `slope` must be non-negative; `curvature` may be negative but probably not below -1, since this would cause decreasing (eta/s)(T).
+
+For T < Tc (HRG phase), eta/s is constant, controlled by a single input parameter.
+
+These parameters may be set in the config file or on the command line with keys `etas_hrg`, `etas_min`, `etas_slope`, `etas_curv`.
+
+The bulk viscosity is parametrized as a Cauchy distribution with its peak at Tc and tunable max and width:
+
+    (zeta/s)(T) = max / (1 + ((T - Tc)/width)^2)
+
+The max and width may be set in the config file or on the command line with keys `zetas_max`, `zetas_width`.
+
 ### Running initial conditions
 
-Place a file `initial.dat` in the `vishnew` folder and run the executable.
+By default (with option `InitialURead = 1`), the initial energy density, flow, and shear viscous tensor must be provided.
+Place the following files in the `vishnew` folder:
 
-The initial file must be a square block-style grid of energy or entropy density, with no other content in the file (comments will not work).
+- `ed.dat` - energy density
+- `u{1,2}.dat` - flow velocity in x and y directions
+- `pi{11,12,22}.dat` - components of the shear tensor (the remaining components are computed internally)
+- The bulk pressure is computed internally as the deviation from ideal pressure, Π = e/3 - p(e).
+
+If `InitialURead = 0`, only the energy density is required.
+Alternatively, set `IEin = 1` and provide the entropy density `sd.dat`.
+
+All files must contain square block-style grids and nothing else (comments will not work).
 The grid size depends on the `LS` (lattice size) parameter: grid size = 2\*LS + 1.
 The grid step is hard-coded to 0.1 fm.
-So e.g. with the default `LS = 130`, the initial condition must be a 261x261 grid from -13 to +13 fm.
-
-If the `IEin` parameter is set to 1, the initial condition will be interpreted as entropy density;
-if `IEin = 0`, it will be interpreted as energy density.
+So e.g. with the default `LS = 130`, the grid is 261x261 from -13 to +13 fm.
 
 During time evolution, the code prints out a line for each timestep
 
@@ -66,8 +91,20 @@ During time evolution, the code prints out a line for each timestep
 
 Evolution stops after the max energy density drops below the configured decoupling energy density.
 
-The only output file is the hypersurface data `surface.dat`, with columns
+The only output file is the hypersurface data `surface.dat`, beginning with a commented header containing the thermodynamic freeze-out quantities
 
-    tau x y dsigma_t dsigma_x dsigma_y v_x v_y e p T pi00 pi01 pi02 pi11 pi12 pi22 pi33 PI
+    # e = <energy density>
+    # p = <pressure>
+    # s = <entropy density>
+    # T = <temperature>
 
-and one row for each hypersurface cell.
+and followed by data columns
+
+    tau x y dsigma^t dsigma^x dsigma^y v_x v_y pi00 pi01 pi02 pi11 pi12 pi22 pi33 PI
+
+where each row represents a volume element.
+All units are GeV and fm.
+
+**Note**:
+The normal vector `dsigma` is output in contravariant form (index raised).
+Previous versions output the covariant vector (index lowered).
