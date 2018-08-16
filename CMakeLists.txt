@@ -60,6 +60,7 @@ if(WARNINGS)
 endif()
 
 install(FILES ${PROJECT_NAME}.conf DESTINATION bin)
+install(FILES eos/eos.dat DESTINATION bin)
 
 #add_subdirectory(eos)
 add_subdirectory(src)
