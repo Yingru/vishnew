@@ -59,8 +59,8 @@ if(WARNINGS)
   set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wall -Wextra")
 endif()
 
-install(FILES ${PROJECT_NAME}.conf DESTINATION bin)
-install(FILES eos/eos.dat DESTINATION bin)
+install(FILES ${PROJECT_NAME}.conf DESTINATION results)
+install(FILES eos/eos.dat DESTINATION results)
 
 #add_subdirectory(eos)
 add_subdirectory(src)
